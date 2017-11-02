@@ -41,8 +41,9 @@ def answer(times,time_limit):
     print '\n'
 
 
-    def rescue_bunnies(times,current_pos,remaining_time,bunnies_grabbed = [],bunnies_rescued = [], traveled_to = []):
-        traveled_to.append(current_pos)
+    def rescue_bunnies(times,current_pos,remaining_time,bunnies_grabbed = [],bunnies_rescued = []):
+        if len(bunnies_rescued) == len(times)-2:
+            return bunnies_rescued
         bunnies_grabbed = bunnies_grabbed[:]
         bunnies_rescued = bunnies_rescued[:]
         print 'currently at',current_pos,'remaining time:', remaining_time
@@ -65,8 +66,8 @@ def answer(times,time_limit):
         possible_results = []
 
         for new_pos in range(len(times)):
-            if new_pos != current_pos and new_pos not in traveled_to:
-                possible_results.append(rescue_bunnies(times,new_pos,remaining_time - times[current_pos][new_pos],bunnies_grabbed,bunnies_rescued,traveled_to))
+            if new_pos != current_pos and new_pos not in bunnies_grabbed and new_pos not in bunnies_rescued:
+                possible_results.append(rescue_bunnies(times,new_pos,remaining_time - times[current_pos][new_pos],bunnies_grabbed,bunnies_rescued))
 
         print 'possible_results',possible_results
 
@@ -118,7 +119,7 @@ times3 = [
 [1,1,1,1,1,0,1],
 [1,1,1,1,1,1,0]
 ]
-time_limit3 = 999
+time_limit3 = 99
 
 print '%'*400
-print answer(times3,time_limit3)
+print answer(times2,time_limit2)
