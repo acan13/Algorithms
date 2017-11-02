@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript">
+    function flatten(arr){
+      for(var i = 0; i < arr.length; i++){
+        if(Array.isArray(arr[i])){
+          arr = arr.slice(0,i).concat(flatten(arr[i])).concat(arr.slice(i+1,arr.length));
+        }
+      }
+      return arr
+
+    }
+    </script>
+  </head>
+  <body>
+
+  </body>
+</html>
