@@ -35,15 +35,15 @@ def answer(times,time_limit):
     for i in range(w):
         times[i] = shortest_times(times,i)
 
-    print 'final times'
-    for i in times:
-        print i
-    print '\n'
+    # print 'final times'
+    # for i in times:
+    #     print i
+    # print '\n'
 
 
     def rescue_bunnies(times,current_pos,remaining_time,bunnies_grabbed = [],bunnies_rescued = []):
-        if len(bunnies_rescued) == len(times)-2:
-            return bunnies_rescued
+        # if len(bunnies_rescued) == len(times)-2:
+        #     return bunnies_rescued
         bunnies_grabbed = bunnies_grabbed[:]
         bunnies_rescued = bunnies_rescued[:]
         print 'currently at',current_pos,'remaining time:', remaining_time
@@ -53,28 +53,31 @@ def answer(times,time_limit):
 
         # add bunnies grabbed to rescued bunnies if you are at the bulkhead
         if current_pos == len(times) - 1 and remaining_time >= 0:
-            print 'rescued some bunnies:',bunnies_grabbed
+            # print 'rescued some bunnies:',bunnies_grabbed
             for bunny in bunnies_grabbed:
                 bunnies_rescued.append(bunny)
             bunnies_rescued = list(set(bunnies_rescued))
             bunnies_rescued.sort()
         # grab a bunny if you're at their location and haven't rescued them yet
         elif current_pos > 0 and current_pos not in bunnies_rescued:
-            print 'grabbed a bunny:',current_pos
+            # print 'grabbed a bunny:',current_pos
             bunnies_grabbed.append(current_pos)
+
+        if len(bunnies_rescued) == len(times)-2:
+            return bunnies_rescued
 
         possible_results = []
 
         for new_pos in range(len(times)):
-            if new_pos != current_pos and new_pos not in bunnies_grabbed and new_pos not in bunnies_rescued:
+            if new_pos != current_pos and new_pos not in bunnies_grabbed and new_pos not in bunnies_rescued and new_pos != 0:
                 possible_results.append(rescue_bunnies(times,new_pos,remaining_time - times[current_pos][new_pos],bunnies_grabbed,bunnies_rescued))
 
-        print 'possible_results',possible_results
+        # print 'possible_results',possible_results
 
 
         max_length = 0
         for result in possible_results:
-            print 'this should not be more than one deep?',result
+            # print 'this should not be more than one deep?',result
             if len(result) > max_length:
                 max_length = len(result)
 
@@ -86,14 +89,14 @@ def answer(times,time_limit):
             possible_results.remove("EXTERMINATE!")
 
         possible_results.sort()
-        print 'processed possible_results',possible_results
+        # print 'processed possible_results',possible_results
         final_result = possible_results[0]
         return final_result
 
 
 
     is_this_it = rescue_bunnies(times,0,time_limit)
-    print 'final result:', is_this_it
+    # print 'final result:', is_this_it
     here = [x-1 for x in is_this_it]
     return here
 
@@ -122,4 +125,4 @@ times3 = [
 time_limit3 = 99
 
 print '%'*400
-print answer(times2,time_limit2)
+print answer(times3,time_limit3)
