@@ -41,7 +41,7 @@ def answer(times,time_limit):
     #     print i
     # print '\n'
 
-    def new_rescue_bunnies(times,current_pos,remaining_time,visited_locations = [], bunnies_rescued = []):
+    def rescue_bunnies(times,current_pos,remaining_time,visited_locations = [], bunnies_rescued = []):
         # print 'current_pos:',current_pos, 'remaining_time:',remaining_time
         #should run at most (len(times)-1)*2 times
 
@@ -76,7 +76,7 @@ def answer(times,time_limit):
         # can now visit any location not yet visited, or the bulkhead if not already on it
         for new_pos in range(len(times)):
             if new_pos != current_pos and not new_pos in visited_locations:
-                possible_results.append(new_rescue_bunnies(times,new_pos,remaining_time-times[current_pos][new_pos],visited_locations,bunnies_rescued))
+                possible_results.append(rescue_bunnies(times,new_pos,remaining_time-times[current_pos][new_pos],visited_locations,bunnies_rescued))
 
         # print 'possible results',possible_results
 
@@ -89,66 +89,7 @@ def answer(times,time_limit):
         return possible_results[0]
 
 
-
-    def rescue_bunnies(times,current_pos,remaining_time,bunnies_grabbed = [],bunnies_rescued = []):
-        # if len(bunnies_rescued) == len(times)-2:
-        #     return bunnies_rescued
-        bunnies_grabbed = bunnies_grabbed[:]
-        bunnies_rescued = bunnies_rescued[:]
-        # print 'currently at',current_pos,'remaining time:', remaining_time
-        # end if you can't get to the bulkhead in time
-        if remaining_time < times[current_pos][len(times)-1]:
-            return bunnies_rescued
-
-        # add bunnies grabbed to rescued bunnies if you are at the bulkhead
-        if current_pos == len(times) - 1 and remaining_time >= 0:
-            # print 'rescued some bunnies:',bunnies_grabbed
-            for bunny in bunnies_grabbed:
-                bunnies_rescued.append(bunny)
-            bunnies_rescued = list(set(bunnies_rescued))
-            bunnies_rescued.sort()
-        # grab a bunny if you're at their location and haven't rescued them yet
-        elif current_pos > 0 and current_pos not in bunnies_rescued:
-            # print 'grabbed a bunny:',current_pos
-            bunnies_grabbed.append(current_pos)
-
-        if len(bunnies_rescued) == len(times)-2:
-            return bunnies_rescued
-
-        possible_results = []
-
-        for new_pos in range(len(times)):
-            if new_pos != current_pos and new_pos not in bunnies_grabbed and new_pos not in bunnies_rescued and new_pos != 0:
-                possible_results.append(rescue_bunnies(times,new_pos,remaining_time - times[current_pos][new_pos],bunnies_grabbed,bunnies_rescued))
-
-        # print 'possible_results',possible_results
-
-
-        max_length = 0
-        for result in possible_results:
-            # print 'this should not be more than one deep?',result
-            if len(result) > max_length:
-                max_length = len(result)
-
-        for i in range(len(possible_results)):
-            if len(possible_results[i]) < max_length:
-                possible_results[i] = "EXTERMINATE!"
-
-        while "EXTERMINATE!" in possible_results:
-            possible_results.remove("EXTERMINATE!")
-
-        possible_results.sort()
-        # print 'processed possible_results',possible_results
-        final_result = possible_results[0]
-        return final_result
-
-
-
-    #print new_rescue_bunnies(times,0,time_limit), 'final result for new'
-    is_this_it = rescue_bunnies(times,0,time_limit)
-    # print 'final result:', is_this_it
-    here = [x-1 for x in is_this_it]
-    return here == new_rescue_bunnies(times,0,time_limit)
+    return rescue_bunnies(times,0,time_limit)
 
 
 
@@ -205,28 +146,28 @@ times6 = [
 
 time_limit6 = 1
 
-# print '%'*400
-# print answer(times6,time_limit6)
+print '%'*400
+print answer(times2,time_limit2)
 """
 testing
 """
-broken_maps = []
-
-for test in range(500000):
-    print 'test',test
-    size = randint(2,2)
-    time = randint(-200,200)
-    test_map = []
-    for i in range(size):
-        row = []
-        for j in range(size):
-            row.append(randint(-100,100))
-        test_map.append(row)
-    if not answer(test_map,time):
-        broken_maps.append(test_map)
-print 'there were',len(broken_maps), 'maps that broke'
-print 'the maps that broke it'
-for test_map in broken_maps:
-    for row in test_map:
-        print row
-    print '\n'
+# broken_maps = []
+#
+# for test in range(500000):
+#     print 'test',test
+#     size = randint(2,2)
+#     time = randint(-200,200)
+#     test_map = []
+#     for i in range(size):
+#         row = []
+#         for j in range(size):
+#             row.append(randint(-100,100))
+#         test_map.append(row)
+#     if not answer(test_map,time):
+#         broken_maps.append(test_map)
+# print 'there were',len(broken_maps), 'maps that broke'
+# print 'the maps that broke it'
+# for test_map in broken_maps:
+#     for row in test_map:
+#         print row
+#     print '\n'
