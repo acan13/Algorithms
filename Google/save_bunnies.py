@@ -1,12 +1,13 @@
 from random import randint
 def answer(times,time_limit):
-
     w = len(times)
+    if w == 2:
+        return []
     for i in range(w):
         if times[i][i] < 0:
             return range(w-2)
 
-    def shortest_times(times,start,shortest = [],count = 0):
+    def shortest_times(times,start,shortest = []):
         """
         This is used to change the given times matrix to reflect the
         actual shortest travel times, including routes through other nodes
@@ -17,33 +18,38 @@ def answer(times,time_limit):
 
         It is based off an algorithm I found called the Bellman-Ford
         that acts similarly to Dijkstra but can handle negative distances.
-        """
-        if count == len(times) - 1:
-            return shortest
-        count += 1
 
+        It runs until there is no change from one iteration to another or
+        all of the distances are negative.
+        """
         if shortest == []:
             shortest = [9999]*len(times)
             shortest[start] = 0
 
-        for i in range(len(times)):
-            for j in range(len(times)):
-                if shortest[i] + times[i][j] < shortest[j]:
-                    shortest[j] = shortest[i] + times[i][j]
+        shortest_test = shortest[:]
 
-        return shortest_times(times,start,shortest,count)
+        for current_pos in range(len(times)):
+            for destination in range(len(times)):
+                if shortest[current_pos] + times[current_pos][destination] < shortest[destination]:
+                    shortest[destination] = shortest[current_pos] + times[current_pos][destination]
 
-    for i in range(w):
-        times[i] = shortest_times(times,i)
+        if shortest_test == shortest or all(x < 0 for x in shortest):
+            return shortest
 
-    # print 'final times'
-    # for i in times:
-    #     print i
-    # print '\n'
+        return shortest_times(times,start,shortest)
+
+
+    # use shortest_times to find the new times matrix with actual shortest times
+    for row in range(w):
+        times[row] = shortest_times(times,row)
+
+    print 'final times'
+    for i in times:
+        print i
+    print '\n'
 
     def rescue_bunnies(times,current_pos,remaining_time,visited_locations = [], bunnies_rescued = []):
         # print 'current_pos:',current_pos, 'remaining_time:',remaining_time
-        #should run at most (len(times)-1)*2 times
 
         # deep copy
         visited_locations = visited_locations[:]
@@ -74,16 +80,15 @@ def answer(times,time_limit):
         possible_results = []
 
         # can now visit any location not yet visited, or the bulkhead if not already on it
+        # add the results to the possible results
         for new_pos in range(len(times)):
             if new_pos != current_pos and not new_pos in visited_locations:
                 possible_results.append(rescue_bunnies(times,new_pos,remaining_time-times[current_pos][new_pos],visited_locations,bunnies_rescued))
 
         # print 'possible results',possible_results
 
-        max_length = 0
-        for result in possible_results:
-            if len(result) > max_length:
-                max_length = len(result)
+        # filter all the results and return only the best one
+        max_length = max([len(sublist) for sublist in possible_results])
         possible_results = [x for x in possible_results if len(x) == max_length]
         possible_results.sort()
         return possible_results[0]
@@ -113,7 +118,7 @@ times3 = [
 [1,1,1,1,1,0,1],
 [1,1,1,1,1,1,0]
 ]
-time_limit3 = 99
+time_limit3 = -999
 
 times4 = [
 [0,2,2,2,2,2,-1],
@@ -140,14 +145,18 @@ times5 = [
 time_limit5 = 2
 
 times6 = [
-[0,-1],
-[1,0]
+[0,999,999,999,999,999,-1],
+[999,0,999,999,999,999,999],
+[999,999,0,999,999,999,999],
+[999,999,999,0,999,999,999],
+[999,999,999,999,0,999,999],
+[999,999,999,999,999,0,999],
+[-1,999,999,999,999,999,0]
 ]
-
-time_limit6 = 1
+time_limit6 = 999
 
 print '%'*400
-print answer(times2,time_limit2)
+print answer(times6,time_limit6)
 """
 testing
 """
