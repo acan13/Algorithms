@@ -1,16 +1,8 @@
 def answer(times,time_limit):
     w = len(times)
-
-    def smallest_non_diagonal(times):
-        smallest = 99999
-        for row in range(len(times)):
-            for num in range(len(times)):
-                if row != num and times[row][num] < smallest:
-                    smallest = times[row][num]
-        return smallest
-
-
-
+    for i in range(w):
+        if times[i][i] < 0:
+            return range(w-2)
 
     def shortest_times(times,start,shortest = [],count = 0):
         if count == len(times) - 1:
@@ -21,24 +13,19 @@ def answer(times,time_limit):
             shortest[start] = 0
 
         for i in range(len(times)):
-            if i != start and times[start][i] < shortest[i]:
-                shortest[i] = times[start][i]
-
-        for i in range(len(times)):
-            if i != start:
-                for j in range(len(times)):
-                    if shortest[i] + times[i][j] < shortest[j]:
-                        shortest[j] = shortest[i] + times[i][j]
+            for j in range(len(times)):
+                if shortest[i] + times[i][j] < shortest[j]:
+                    shortest[j] = shortest[i] + times[i][j]
 
         return shortest_times(times,start,shortest,count)
 
     for i in range(w):
         times[i] = shortest_times(times,i)
 
-    # print 'final times'
-    # for i in times:
-    #     print i
-    # print '\n'
+    print 'final times'
+    for i in times:
+        print i
+    print '\n'
 
 
     def rescue_bunnies(times,current_pos,remaining_time,bunnies_grabbed = [],bunnies_rescued = []):
@@ -46,7 +33,7 @@ def answer(times,time_limit):
         #     return bunnies_rescued
         bunnies_grabbed = bunnies_grabbed[:]
         bunnies_rescued = bunnies_rescued[:]
-        print 'currently at',current_pos,'remaining time:', remaining_time
+        # print 'currently at',current_pos,'remaining time:', remaining_time
         # end if you can't get to the bulkhead in time
         if remaining_time < times[current_pos][len(times)-1]:
             return bunnies_rescued
@@ -124,5 +111,33 @@ times3 = [
 ]
 time_limit3 = 99
 
+times4 = [
+[0,2,2,2,2,2,-1],
+[7,0,7,7,7,7,-1],
+[2,2,0,2,2,2,-1],
+[2,2,2,0,2,2,-1],
+[2,2,2,2,0,2,-1],
+[2,2,2,2,2,0,-1],
+[2,2,2,2,2,2,0],
+]
+
+time_limit4 = 1
+
+times5 = [
+[0,2,2,2,2,2,-1],
+[2,0,2,2,-1,2,2],
+[2,2,0,2,2,2,1],
+[2,2,2,0,2,2,-1],
+[2,2,-1,2,0,2,1],
+[2,2,2,2,2,0,-1],
+[2,-1,2,2,2,2,0],
+]
+
+time_limit5 = 2
+
+times6 = [
+[]
+]
+
 print '%'*400
-print answer(times3,time_limit3)
+print answer(times5,time_limit5)
